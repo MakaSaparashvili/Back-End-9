@@ -1,3 +1,5 @@
+#ForeignKey Relationship
+
 from django.db import models
 
 class Author(models.Model):
@@ -23,3 +25,29 @@ class Book(models.Model):
         verbose_name_plural = 'Books'
     def __str__(self):
         return self.title
+
+
+#ManyToMany Relationship
+
+class Course(models.Model):
+    title = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = 'Course'
+        verbose_name_plural = 'Courses'
+    def __str__(self):
+        return self.title
+
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    course = models.ManyToManyField(Course, related_name='students')
+
+    class Meta:
+        verbose_name = 'Student'
+        verbose_name_plural = 'Students'
+
+    def list_course(self):
+        return ", ".join(course.title for course in self.courses.all())
+    def __str__(self):
+        return self.name
+
