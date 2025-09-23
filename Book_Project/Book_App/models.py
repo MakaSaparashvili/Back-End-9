@@ -6,6 +6,11 @@ class Author(models.Model):
     class Meta:
         verbose_name = 'Author'
         verbose_name_plural = 'Authors'
+
+
+    def book_count(self):
+        return self.book_set.count()
+
     def __str__(self):
         return self.name
 
