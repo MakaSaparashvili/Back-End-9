@@ -40,13 +40,13 @@ class Course(models.Model):
 
 class Student(models.Model):
     name = models.CharField(max_length=100)
-    course = models.ManyToManyField(Course, related_name='students')
+    courses = models.ManyToManyField(Course, related_name='students')
 
     class Meta:
         verbose_name = 'Student'
         verbose_name_plural = 'Students'
 
-    def list_course(self):
+    def list_courses(self):
         return ", ".join(course.title for course in self.courses.all())
     def __str__(self):
         return self.name
