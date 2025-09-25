@@ -1,6 +1,8 @@
 #ForeignKey Relationship
+from datetime import date
 
 from django.db import models
+
 
 class Author(models.Model):
     name = models.CharField(max_length=100)
@@ -9,12 +11,12 @@ class Author(models.Model):
         verbose_name = 'Author'
         verbose_name_plural = 'Authors'
 
-
     def book_count(self):
         return self.book_set.count()
 
     def __str__(self):
         return self.name
+
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -23,6 +25,7 @@ class Book(models.Model):
     class Meta:
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
+
     def __str__(self):
         return self.title
 
@@ -35,19 +38,32 @@ class Course(models.Model):
     class Meta:
         verbose_name = 'Course'
         verbose_name_plural = 'Courses'
+
     def __str__(self):
         return self.title
 
+
 class Student(models.Model):
     name = models.CharField(max_length=100)
+    date_of_birth = models.DateField(null=True, blank=True)
     courses = models.ManyToManyField(Course, related_name='students')
 
     class Meta:
         verbose_name = 'Student'
         verbose_name_plural = 'Students'
 
+    @property
+    def age(self):
+        if self.date_of_birth:
+            today = date.today()
+            return (
+                    today.year - self.date_of_birth.year
+                    - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
+            )
+        return None
+
     def list_courses(self):
         return ", ".join(course.title for course in self.courses.all())
+
     def __str__(self):
         return self.name
-
